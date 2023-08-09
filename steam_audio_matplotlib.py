@@ -14,7 +14,7 @@ context      = None
 h            = None
 frame_length = 512
 hop_length   = 256
-model = torch.jit.load(r"./pretrained/cmvn_gru_48.jit")
+model = torch.jit.load(r"./pretrained/cmvn_gru_48_ava.jit")
 
 #Silerio
 #silerio_model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
