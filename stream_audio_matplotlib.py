@@ -2,7 +2,6 @@ import time
 from matplotlib import pyplot as plt
 import numpy as np
 import pyaudio
-import streamlit as sl
 import numpy as np
 from threading import Thread,Event
 import time
@@ -29,7 +28,7 @@ p = pyaudio.PyAudio()
 recording       = Event()
 sample_rate     = 16000
 numb_frames     = frame_length  * 100
-input_device    = 1
+input_device    = -1
 frames          = np.zeros(numb_frames, dtype=np.float32)
 outputs         = np.zeros(200, dtype=np.float32)
 #outputs_silerio = np.zeros(200, dtype=np.float32)
@@ -103,7 +102,7 @@ def live_update_demo():
 
         fig.canvas.blit(fig.bbox)
         fig.canvas.flush_events()
-        plt.pause(.01)
+        plt.pause(.001)
 
 if __name__ == '__main__':
     Thread(target=record).start()
