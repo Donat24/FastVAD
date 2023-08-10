@@ -14,7 +14,7 @@ context      = None
 h            = None
 frame_length = 512
 hop_length   = 256
-model = torch.jit.load(r"./pretrained/cmvn_gru_48_combined.jit")
+model = torch.jit.load(r"./pretrained/cmvn_gru_32_hopsize_256.jit")
 
 #Silerio
 #silerio_model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
@@ -47,7 +47,7 @@ def record():
 
     while True:
         
-        data = np.frombuffer(stream.read(256), dtype=np.float32)
+        data = np.frombuffer(stream.read(hop_length), dtype=np.float32)
         #speech_silerio     = silerio_model(data_tensor, sample_rate).item()
         frames  = np.concatenate((frames, data))
         frames  = frames[ - numb_frames : ]
@@ -82,6 +82,7 @@ def live_update_demo():
     #(pred_silerio,) = axis_prediction.plot(outputs_silerio, color= "green",  animated=True)
 
     plt.show(block=False)
+    plt.legend()
     plt.pause(0.1)
 
     bg = fig.canvas.copy_from_bbox(fig.bbox)
