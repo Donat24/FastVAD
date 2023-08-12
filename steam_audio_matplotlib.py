@@ -11,10 +11,9 @@ import torch
 
 #Eigenes Modell
 context      = None
-h            = None
 frame_length = 512
-hop_length   = 256
-model = torch.jit.load(r"./pretrained/cmvn_gru_32_hopsize_256.jit")
+hop_length   = 512
+model = torch.jit.load(r"./pretrained/dnn_mfcc_512_512_128_4.jit")
 
 #Silerio
 #silerio_model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
@@ -31,7 +30,7 @@ sample_rate     = 16000
 numb_frames     = frame_length  * 100
 input_device    = 1
 frames          = np.zeros(numb_frames, dtype=np.float32)
-outputs         = np.zeros(200, dtype=np.float32)
+outputs         = np.zeros(100, dtype=np.float32)
 #outputs_silerio = np.zeros(200, dtype=np.float32)
 
 def record():
@@ -52,10 +51,10 @@ def record():
         frames  = np.concatenate((frames, data))
         frames  = frames[ - numb_frames : ]
         data_tensor = torch.from_numpy(frames[ - frame_length : ].copy())
-        speech, context, h = model(data_tensor, context, h)
+        speech, context = model(data_tensor, context)
         print(speech.item())
         outputs = np.concatenate((outputs, [speech.item()]))
-        outputs = outputs[ - 200 : ]
+        outputs = outputs[ - 100 : ]
         
         #outputs_silerio = np.concatenate((outputs_silerio, [speech_silerio]))
         #outputs_silerio = outputs_silerio[ - 100 : ]
@@ -74,7 +73,7 @@ def live_update_demo():
     ax.set_ylim([-1, 1])
     (wave,) = ax.plot(frames, animated=True)
     
-    axis_prediction.set_xlim([0,200])
+    axis_prediction.set_xlim([0,100])
     axis_prediction.set_ylim([0, 1])
     axis_prediction.set_xticks([])
     axis_prediction.set_yticks([])
