@@ -12,11 +12,11 @@ from filter import BayesFilter
 
 
 #Eigenes Modell
-context      = None
-h            = None
+context_1    = None
+context_2    = None
 frame_length = 512
 hop_length   = 512
-model = torch.jit.load(r"./pretrained/dnn_mfcc_512_512_128_4.jit")
+model = torch.jit.load(r"./pretrained/dnn_dnn_mfcc_512_512_7_7x4_3.jit")
 
 #Silerio
 silerio_model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
@@ -39,7 +39,7 @@ outputs         = np.zeros(100, dtype=np.float32)
 outputs_silerio = np.zeros(100, dtype=np.float32)
 
 def record():
-    global recording, sample_rate, numb_frames, input_device, frames, context, h, outputs, outputs_silerio
+    global recording, sample_rate, numb_frames, input_device, frames, context_1, context_2, outputs, outputs_silerio
     stream = p.open(
         format   = pyaudio.paFloat32,
         channels = 1,
@@ -57,7 +57,7 @@ def record():
         data_tensor = torch.from_numpy(frames[ - frame_length : ].copy())
         speech_silerio     = silerio_model(data_tensor, sample_rate).item()        
         #speech, context, h = model(data_tensor, context, h)
-        speech, context = model(data_tensor, context)        
+        speech, context_1, context_2 = model(data_tensor, context_1, context_2)       
         #outputs = np.concatenate((outputs, [speech.item()]))
         speech_prediction = filter.process(speech.item())
         outputs = np.concatenate((outputs, [speech_prediction]))
