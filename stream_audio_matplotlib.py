@@ -9,10 +9,11 @@ import librosa
 import torch
 
 #Eigenes Modell
-context      = None
+context_1    = None
+context_2    = None
 frame_length = 512
 hop_length   = 512
-model = torch.jit.load(r"./pretrained/dnn_mfcc_512_512_128_4.jit")
+model = torch.jit.load(r"./pretrained/dnn_dnn_mfcc_512_512_7_7x4_3.jit")
 
 #Silerio
 #silerio_model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
@@ -33,7 +34,7 @@ outputs         = np.zeros(100, dtype=np.float32)
 #outputs_silerio = np.zeros(200, dtype=np.float32)
 
 def record():
-    global recording, sample_rate, numb_frames, input_device, frames, context, h, outputs, outputs_silerio
+    global recording, sample_rate, numb_frames, input_device, frames, context_1, context_2, outputs
     stream = p.open(
         format   = pyaudio.paFloat32,
         channels = 1,
@@ -50,7 +51,7 @@ def record():
         frames  = np.concatenate((frames, data))
         frames  = frames[ - numb_frames : ]
         data_tensor = torch.from_numpy(frames[ - frame_length : ].copy())
-        speech, context = model(data_tensor, context)
+        speech, context_1, context_2 = model(data_tensor, context_1, context_2)
         print(speech.item())
         outputs = np.concatenate((outputs, [speech.item()]))
         outputs = outputs[ - 100 : ]
