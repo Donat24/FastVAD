@@ -31,4 +31,5 @@ class ModelWrapper():
         input is a PyTorch tensor
         """
         speech, self.context_1, self.context_2, self.context_3 = self.model(data, self.context_1, self.context_2, self.context_3)
+        print(sum(self.context_1),sum( self.context_2),sum( self.context_3))
         return speech

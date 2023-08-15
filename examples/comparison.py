@@ -10,14 +10,17 @@ import torch
 
 
 #Eigenes Modell
-context_1    = None
-context_2    = None
 frame_length = 512
 hop_length   = 512
-model = torch.jit.load(r"./pretrained/dnn_dnn_mfcc_512_512_7_7x4_3.jit")
 
-#Silerio
-silerio_model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
+fast_vad_model = torch.hub.load(
+    repo_or_dir  = 'Donat24/FastVAD',
+    model        = 'fast_vad',
+    force_reload = True
+)
+
+#Silero
+silero_model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
     model        = 'silero_vad',
     force_reload = True,
     onnx         = True,
@@ -31,11 +34,12 @@ sample_rate     = 16000
 numb_frames     = frame_length  * 100
 input_device    = -1
 frames          = np.zeros(numb_frames, dtype=np.float32)
-outputs         = np.zeros(100, dtype=np.float32)
-outputs_silerio = np.zeros(100, dtype=np.float32)
+
+outputs_fast_vad = np.zeros(100, dtype=np.float32)
+outputs_silero   = np.zeros(100, dtype=np.float32)
 
 def record():
-    global recording, sample_rate, numb_frames, input_device, frames, context_1, context_2, outputs, outputs_silerio
+    global recording, sample_rate, numb_frames, input_device, frames, outputs_fast_vad, outputs_silero
     stream = p.open(
         format   = pyaudio.paFloat32,
         channels = 1,
@@ -47,28 +51,24 @@ def record():
 
     while True:
         
+        #Read Data
         data = np.frombuffer(stream.read(hop_length), dtype=np.float32)
         frames  = np.concatenate((frames, data))
         frames  = frames[ - numb_frames : ]
         data_tensor = torch.from_numpy(frames[ - frame_length : ].copy())
-        speech_silerio     = silerio_model(data_tensor, sample_rate).item()        
-        #speech, context, h = model(data_tensor, context, h)
-        speech, context_1, context_2 = model(data_tensor, context_1, context_2)       
-        #outputs = np.concatenate((outputs, [speech.item()]))
-        #speech_prediction = filter.process(speech.item())
-        speech_prediction = speech
-        outputs = np.concatenate((outputs, [speech_prediction]))
         
-        #filter = savgol_filter(np.concatenate((outputs[-49:],speech)), 10, 2, mode='nearest')
-        #outputs = np.concatenate((outputs,[filter[-1]] ))
-        outputs = outputs[ - 100 : ]
+        #Predict
+        speech_fast_vad = fast_vad_model.predict(data_tensor).item() 
+        speech_silerio  = silero_model(data_tensor, sample_rate).item()
+
+        #Logging
+        print(f"{speech_fast_vad}\t{speech_silerio}")
         
-        print(f"{speech.item()}\t{speech_silerio}")
-        
-        outputs_silerio = np.concatenate((outputs_silerio, [speech_silerio]))
-        #outputs_silerio = np.concatenate((outputs_silerio, [speech.item()]))
-        
-        outputs_silerio = outputs_silerio[ - 100 : ]
+        #Append Preds
+        outputs_fast_vad = np.concatenate((outputs_fast_vad, [speech_fast_vad]))
+        outputs_fast_vad = outputs_fast_vad[ - 100 : ]
+        outputs_silero = np.concatenate((outputs_silero, [speech_silerio]))
+        outputs_silero = outputs_silero[ - 100 : ]
 
 def stop():
     recording.clear()
@@ -93,8 +93,8 @@ def live_update_demo():
     axis_prediction_silero.set_ylim([0, 1])
     axis_prediction_silero.set_xticks([])
     axis_prediction_silero.set_yticks([])
-    (pred,)         = axis_prediction.plot(outputs,         color= "orange", animated=True)
-    (pred_silerio,) = axis_prediction_silero.plot(outputs_silerio, color= "green",  animated=True)
+    (pred,)         = axis_prediction.plot(outputs_fast_vad,     color= "orange", animated=True)
+    (pred_silero,) = axis_prediction_silero.plot(outputs_silero, color= "green",  animated=True)
 
     plt.show(block=False)
     plt.pause(0.1)
@@ -102,7 +102,7 @@ def live_update_demo():
     bg = fig.canvas.copy_from_bbox(fig.bbox)
     ax.draw_artist(wave)
     axis_prediction.draw_artist(pred)
-    axis_prediction_silero.draw_artist(pred_silerio)
+    axis_prediction_silero.draw_artist(pred_silero)
     fig.canvas.blit(fig.bbox)
 
     while True:
@@ -111,10 +111,10 @@ def live_update_demo():
 
         wave.set_ydata(frames)
         ax.draw_artist(wave)
-        pred.set_ydata(outputs)
+        pred.set_ydata(outputs_fast_vad)
         axis_prediction.draw_artist(pred)
-        pred_silerio.set_ydata(outputs_silerio)
-        axis_prediction_silero.draw_artist(pred_silerio)
+        pred_silero.set_ydata(outputs_silero)
+        axis_prediction_silero.draw_artist(pred_silero)
 
 
         fig.canvas.blit(fig.bbox)
