@@ -3,7 +3,7 @@ dependencies = ["numpy", "torch", "torchaudio"]
 import torch
 import os
 import numpy as np
-from util.model_wrapper import ModelWrapper
+from .util.model_wrapper import ModelWrapper
 
 def fast_vad():
     """
