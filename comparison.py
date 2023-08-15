@@ -8,7 +8,7 @@ import time
 import librosa
 import torch
 
-from filter import BayesFilter
+#from filter import BayesFilter
 
 
 #Eigenes Modell
@@ -24,8 +24,6 @@ silerio_model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
     force_reload = True,
     onnx         = True,
 )
-
-filter = BayesFilter(0.5,0.5,0.5)
 
 #PyAudio
 p = pyaudio.PyAudio()
