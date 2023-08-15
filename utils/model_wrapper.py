@@ -10,6 +10,9 @@ class ModelWrapper():
         self.reset()
 
     def reset(self):
+        """
+        resets the context. should be used before classifying a new file
+        """
         self.context_1    = None
         self.context_2    = None
         self.context_3    = None
@@ -18,8 +21,14 @@ class ModelWrapper():
         return torch.from_numpy(np.frombuffer(buffer, dtype=np.float32))
     
     def predict_buffer(self, buffer):
+        """
+        input is a buffer (f.x. pyaudio stream)
+        """
         return self.predict(data=self.buffer_to_tensor(buffer))
 
     def predict(self, data):
+        """
+        input is a PyTorch tensor
+        """
         speech, self.context_1, self.context_2, self.context_3 = self.model(data, self.context_1, self.context_2, self.context_3)
         return speech
