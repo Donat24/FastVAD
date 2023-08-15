@@ -8,8 +8,6 @@ import time
 import librosa
 import torch
 
-#from filter import BayesFilter
-
 
 #Eigenes Modell
 context_1    = None
