@@ -13,9 +13,7 @@ class ModelWrapper():
         """
         resets the context. should be used before classifying a new file
         """
-        self.context_1    = None
-        self.context_2    = None
-        self.context_3    = None
+        pass
     
     def buffer_to_tensor(self, buffer):
         return torch.from_numpy(np.frombuffer(buffer, dtype=np.float32))
@@ -30,5 +28,44 @@ class ModelWrapper():
         """
         input is a PyTorch tensor
         """
+        pass
+
+class ModelWrapperDNNDNN(ModelWrapper):
+    """
+    Wrapper für DNN DNN Architektur
+    """
+    def __init__(self, path) -> None:
+        self.model = torch.jit.load(path)
+        self.reset()
+
+    def reset(self):
+        self.context_1    = None
+        self.context_2    = None
+    
+    def buffer_to_tensor(self, buffer):
+        return torch.from_numpy(np.frombuffer(buffer, dtype=np.float32))
+
+    def predict(self, data):
+        speech, self.context_1, self.context_2 = self.model(data, self.context_1, self.context_2)
+        return speech
+
+class ModelWrapperDNNDNNGRU(ModelWrapper):
+    """
+    Wrapper für DNN DNN GRU Architektur
+    """
+    def __init__(self, path) -> None:
+        self.model = torch.jit.load(path)
+        self.reset()
+
+    def reset(self):
+        self.context_1    = None
+        self.context_2    = None
+        self.context_3    = None
+    
+    def buffer_to_tensor(self, buffer):
+        return torch.from_numpy(np.frombuffer(buffer, dtype=np.float32))
+
+    def predict(self, data):
         speech, self.context_1, self.context_2, self.context_3 = self.model(data, self.context_1, self.context_2, self.context_3)
         return speech
+
