@@ -1,4 +1,4 @@
-dependencies = ["numpy", "torch", "torchaudio"]
+dependencies = ["numpy", "torch", "torchaudio", "util"]
 
 import torch
 import os
