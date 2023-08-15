@@ -16,7 +16,7 @@ context_1    = None
 context_2    = None
 frame_length = 512
 hop_length   = 512
-model = torch.jit.load(r"./pretrained/dnn_dnn_mfcc_512_512_7_7x4_3.jit")
+model = torch.jit.load(r"./pretrained/dnn_gru_mfcc_512_512_7.jit")
 
 #Silerio
 silerio_model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
@@ -59,7 +59,8 @@ def record():
         #speech, context, h = model(data_tensor, context, h)
         speech, context_1, context_2 = model(data_tensor, context_1, context_2)       
         #outputs = np.concatenate((outputs, [speech.item()]))
-        speech_prediction = filter.process(speech.item())
+        #speech_prediction = filter.process(speech.item())
+        speech_prediction = speech
         outputs = np.concatenate((outputs, [speech_prediction]))
         
         #filter = savgol_filter(np.concatenate((outputs[-49:],speech)), 10, 2, mode='nearest')
