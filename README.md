@@ -21,6 +21,6 @@ speech_fast_vad = fast_vad_model.predict(audio_data).item()
 
 ```
 
-## Samples Apps 
+## Sample Apps 
 
 
