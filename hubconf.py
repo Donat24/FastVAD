@@ -10,5 +10,7 @@ def fast_vad():
     returns a classifier
     """
     dirname    = os.path.dirname(__file__)
-    model_path = os.path.join(dirname, "pretrained", "dnn_dnn_gru_mfcc_512_512.jit")
-    return ModelWrapperDNNDNNGRU(model_path)
+    model_path = os.path.join(dirname, "pretrained", "dnn_dnn_mfcc_512_512.jit")
+    return ModelWrapperDNNDNN(model_path)
+    #model_path = os.path.join(dirname, "pretrained", "dnn_dnn_gru_mfcc_512_512.jit")
+    #return ModelWrapperDNNDNNGRU(model_path)
