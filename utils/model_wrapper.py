@@ -7,6 +7,7 @@ class ModelWrapper():
     """
     def __init__(self, path) -> None:
         self.model = torch.jit.load(path)
+        self.model.eval()
         self.reset()
 
     def reset(self):
