@@ -31,9 +31,9 @@ class ModelWrapper():
         """
         pass
 
-class ModelWrapperDNNDNN(ModelWrapper):
+class ModelWrapperDNNGRU(ModelWrapper):
     """
-    Wrapper für DNN DNN Architektur
+    Wrapper für DNN GRU Architektur
     """
     def __init__(self, path) -> None:
         self.model = torch.jit.load(path)
@@ -50,23 +50,23 @@ class ModelWrapperDNNDNN(ModelWrapper):
         speech, self.context_1, self.context_2 = self.model(data, self.context_1, self.context_2)
         return speech
 
-class ModelWrapperDNNDNNGRU(ModelWrapper):
-    """
-    Wrapper für DNN DNN GRU Architektur
-    """
-    def __init__(self, path) -> None:
-        self.model = torch.jit.load(path)
-        self.reset()
-
-    def reset(self):
-        self.context_1    = None
-        self.context_2    = None
-        self.context_3    = None
-    
-    def buffer_to_tensor(self, buffer):
-        return torch.from_numpy(np.frombuffer(buffer, dtype=np.float32))
-
-    def predict(self, data):
-        speech, self.context_1, self.context_2, self.context_3 = self.model(data, self.context_1, self.context_2, self.context_3)
-        return speech
-
+#class ModelWrapperDNNDNNGRU(ModelWrapper):
+#    """
+#    Wrapper für DNN DNN GRU Architektur
+#    """
+#    def __init__(self, path) -> None:
+#        self.model = torch.jit.load(path)
+#        self.reset()
+#
+#    def reset(self):
+#        self.context_1    = None
+#        self.context_2    = None
+#        self.context_3    = None
+#    
+#    def buffer_to_tensor(self, buffer):
+#        return torch.from_numpy(np.frombuffer(buffer, dtype=np.float32))
+#
+#    def predict(self, data):
+#        speech, self.context_1, self.context_2, self.context_3 = self.model(data, self.context_1, self.context_2, self.context_3)
+#        return speech
+#
