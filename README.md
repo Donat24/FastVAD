@@ -4,6 +4,8 @@ A fast voice activity detection based on simple neural network with just 50k par
 ## How to use?
 
 ```python
+import torch
+
 fast_vad_model = torch.hub.load(
     repo_or_dir  = 'Donat24/FastVAD',
     model        = 'fast_vad',
