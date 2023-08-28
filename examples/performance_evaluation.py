@@ -1,4 +1,3 @@
-import cProfile
 import torch
 import timeit
 import statistics as st
@@ -19,16 +18,15 @@ silero_model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
 
 
 def benchmark(inference_function):
-
+    runs = 20
     audio_data = torch.ones(512) # mockup 16khz audio data     
 
-    result = timeit.repeat(lambda: inference_function(audio_data),repeat=20, number=iterations)
+    result = timeit.repeat(lambda: inference_function(audio_data),repeat=runs, number=iterations)
 
     mean = st.mean(result)
     print(f"mean time for {iterations} iteratiions is {mean} s")
-    print(f"standard deviation over 10 runs is {st.pstdev(result)} s")    
+    print(f"standard deviation over {runs} runs is {st.pstdev(result)} s")    
     print(f"mean time for 1 inference step is {(mean / iterations) * 1000 } ms")
-
 
 print("Benchmark Silero")
 benchmark(lambda x: silero_model(x,16000))
