@@ -11,19 +11,12 @@ import torch
 
 #Eigenes Modell
 frame_length = 512
-hop_length   = 512
+hop_length   = 256
 
 fast_vad_model = torch.hub.load(
     repo_or_dir  = 'Donat24/FastVAD',
     model        = 'fast_vad',
     force_reload = True
-)
-
-#Silero
-silero_model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
-    model        = 'silero_vad',
-    force_reload = True,
-    onnx         = True,
 )
 
 #PyAudio
@@ -59,16 +52,13 @@ def record():
         
         #Predict
         speech_fast_vad = fast_vad_model.predict(data_tensor).item() 
-        speech_silerio  = silero_model(data_tensor, sample_rate).item()
 
         #Logging
-        print(f"{speech_fast_vad}\t{speech_silerio}")
+        print(f"{speech_fast_vad}")
         
         #Append Preds
         outputs_fast_vad = np.concatenate((outputs_fast_vad, [speech_fast_vad]))
         outputs_fast_vad = outputs_fast_vad[ - 100 : ]
-        outputs_silero = np.concatenate((outputs_silero, [speech_silerio]))
-        outputs_silero = outputs_silero[ - 100 : ]
 
 def stop():
     recording.clear()
@@ -78,7 +68,7 @@ def live_update_demo():
     fig = plt.figure()
     ax              = fig.add_subplot(111, label="Waveform")
     axis_prediction = fig.add_subplot(111, label="Pred")
-    axis_prediction_silero = fig.add_subplot(111, label="Pred Silero")
+    #axis_prediction_silero = fig.add_subplot(111, label="Pred Silero")
 
     #Waveform
     ax.set_xlim([0, numb_frames])
@@ -102,7 +92,7 @@ def live_update_demo():
     bg = fig.canvas.copy_from_bbox(fig.bbox)
     ax.draw_artist(wave)
     axis_prediction.draw_artist(pred)
-    axis_prediction_silero.draw_artist(pred_silero)
+    #axis_prediction_silero.draw_artist(pred_silero)
     fig.canvas.blit(fig.bbox)
 
     while True:
@@ -113,8 +103,8 @@ def live_update_demo():
         ax.draw_artist(wave)
         pred.set_ydata(outputs_fast_vad)
         axis_prediction.draw_artist(pred)
-        pred_silero.set_ydata(outputs_silero)
-        axis_prediction_silero.draw_artist(pred_silero)
+        #pred_silero.set_ydata(outputs_silero)
+        #axis_prediction_silero.draw_artist(pred_silero)
 
 
         fig.canvas.blit(fig.bbox)
