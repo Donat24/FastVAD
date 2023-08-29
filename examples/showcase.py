@@ -28,8 +28,8 @@ numb_frames     = frame_length  * 100
 input_device    = -1
 frames          = np.zeros(numb_frames, dtype=np.float32)
 
-outputs_fast_vad = np.zeros(100, dtype=np.float32)
-outputs_silero   = np.zeros(100, dtype=np.float32)
+outputs_fast_vad = np.zeros(200, dtype=np.float32)
+#outputs_silero   = np.zeros(100, dtype=np.float32)
 
 def record():
     global recording, sample_rate, numb_frames, input_device, frames, outputs_fast_vad, outputs_silero
@@ -58,7 +58,7 @@ def record():
         
         #Append Preds
         outputs_fast_vad = np.concatenate((outputs_fast_vad, [speech_fast_vad]))
-        outputs_fast_vad = outputs_fast_vad[ - 100 : ]
+        outputs_fast_vad = outputs_fast_vad[ - 200 : ]
 
 def stop():
     recording.clear()
@@ -75,16 +75,16 @@ def live_update_demo():
     ax.set_ylim([-1, 1])
     (wave,) = ax.plot(frames, animated=True)
     
-    axis_prediction.set_xlim([0,100])
+    axis_prediction.set_xlim([0,200])
     axis_prediction.set_ylim([0, 1])
     axis_prediction.set_xticks([])
     axis_prediction.set_yticks([])
-    axis_prediction_silero.set_xlim([0,100])
-    axis_prediction_silero.set_ylim([0, 1])
-    axis_prediction_silero.set_xticks([])
-    axis_prediction_silero.set_yticks([])
+    #axis_prediction_silero.set_xlim([0,100])
+    #axis_prediction_silero.set_ylim([0, 1])
+    #axis_prediction_silero.set_xticks([])
+    #axis_prediction_silero.set_yticks([])
     (pred,)         = axis_prediction.plot(outputs_fast_vad,     color= "orange", animated=True)
-    (pred_silero,) = axis_prediction_silero.plot(outputs_silero, color= "green",  animated=True)
+    #(pred_silero,) = axis_prediction_silero.plot(outputs_silero, color= "green",  animated=True)
 
     plt.show(block=False)
     plt.pause(0.1)
