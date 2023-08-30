@@ -10,6 +10,12 @@ fast_vad_model = torch.hub.load(
     force_reload = True
 )
 
+fast_vad_model_dnn = torch.hub.load(
+    repo_or_dir  = 'Donat24/FastVAD',
+    model        = 'fast_vad_dnn',
+    force_reload = True
+)
+
 silero_model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
     model        = 'silero_vad',
     force_reload = True,
@@ -35,6 +41,8 @@ print("\n")
 print("Benchmark Fast VAD")
 benchmark(lambda x: fast_vad_model.predict(x))
 
-
+print("\n")
+print("Benchmark Fast VAD DNN")
+benchmark(lambda x: fast_vad_model_dnn.predict(x))
 
 
