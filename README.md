@@ -20,7 +20,7 @@ speech_probability = fast_vad_model.predict(audio_data).item()
 
 ## Sample Apps 
 
-Our GitHub repository includes [sample code](https://github.com/Donat24/FastVAD/blob/main/examples/comparison.py) that detects voice activity from the microphone and shows it on a graph.
+Our GitHub repository includes [sample code](https://github.com/Donat24/FastVAD/blob/main/examples/showcase.py) that detects voice activity from the microphone and shows it on a graph.
 
 
 ## Todo:
