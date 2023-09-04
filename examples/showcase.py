@@ -12,11 +12,11 @@ import torch
 frame_length = 512
 hop_length   = 256
 
-fast_vad_model = torch.hub.load(
-    repo_or_dir  = 'Donat24/FastVAD',
-    model        = 'fast_vad',
-    force_reload = True
-)
+#fast_vad_model = torch.hub.load(
+#    repo_or_dir  = 'Donat24/FastVAD',
+#    model        = 'fast_vad',
+#    force_reload = True
+#)
 
 fast_vad_model_dnn = torch.hub.load(
     repo_or_dir  = 'Donat24/FastVAD',
@@ -56,15 +56,15 @@ def record():
         data_tensor = torch.from_numpy(frames[ - frame_length : ].copy())
         
         #Predict
-        speech_fast_vad = fast_vad_model.predict(data_tensor).item() 
+        #speech_fast_vad = fast_vad_model.predict(data_tensor).item() 
         speech_fast_vad_dnn = fast_vad_model_dnn.predict(data_tensor).item() 
 
         #Logging
-        print(f"{speech_fast_vad} - {speech_fast_vad_dnn}")
+        #print(f"{speech_fast_vad} - {speech_fast_vad_dnn}")
         
         #Append Preds
-        outputs_fast_vad = np.concatenate((outputs_fast_vad, [speech_fast_vad]))
-        outputs_fast_vad = outputs_fast_vad[ - 200 : ]
+        #outputs_fast_vad = np.concatenate((outputs_fast_vad, [speech_fast_vad]))
+        #outputs_fast_vad = outputs_fast_vad[ - 200 : ]
 
         outputs_fast_vad_dnn = np.concatenate((outputs_fast_vad_dnn, [speech_fast_vad_dnn]))
         outputs_fast_vad_dnn = outputs_fast_vad_dnn[ - 200 : ]
@@ -92,7 +92,7 @@ def live_update_demo():
     axis_prediction_dnn.set_ylim([0, 1])
     axis_prediction_dnn.set_xticks([])
     axis_prediction_dnn.set_yticks([])
-    (pred,)         = axis_prediction.plot(outputs_fast_vad,     color= "orange", animated=True)
+    #(pred,)         = axis_prediction.plot(outputs_fast_vad,     color= "orange", animated=True)
     (pred_dnn,) = axis_prediction_dnn.plot(outputs_fast_vad_dnn, color= "green",  animated=True)
 
     plt.show(block=False)
@@ -100,7 +100,7 @@ def live_update_demo():
 
     bg = fig.canvas.copy_from_bbox(fig.bbox)
     ax.draw_artist(wave)
-    axis_prediction.draw_artist(pred)
+    #axis_prediction.draw_artist(pred)
     axis_prediction_dnn.draw_artist(pred_dnn)
     fig.canvas.blit(fig.bbox)
 
@@ -110,8 +110,8 @@ def live_update_demo():
 
         wave.set_ydata(frames)
         ax.draw_artist(wave)
-        pred.set_ydata(outputs_fast_vad)
-        axis_prediction.draw_artist(pred)
+        #pred.set_ydata(outputs_fast_vad)
+        #axis_prediction.draw_artist(pred)
         pred_dnn.set_ydata(outputs_fast_vad_dnn)
         axis_prediction_dnn.draw_artist(pred_dnn)
 
