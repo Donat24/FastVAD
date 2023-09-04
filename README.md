@@ -31,6 +31,6 @@ Messured using the [performance evaluation script](https://github.com/Donat24/Fa
 | 0.36 ms | 2.22 ms | 0.49 ms | 0.63 ms |
 
 
-## Todo:
-* sample plots for the readme
+## Live Demo
+![Picture of the live demo](https://github.com/Donat24/FastVAD/blob/main/img/live_demo.png)
 
