@@ -19,7 +19,7 @@ fast_vad_model_dnn = torch.hub.load(
 silero_model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
     model        = 'silero_vad',
     force_reload = True,
-    onnx         = True,
+    onnx         = False,
 )
 
 

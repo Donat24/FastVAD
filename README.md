@@ -22,9 +22,13 @@ speech_probability = fast_vad_model.predict(audio_data).item()
 
 Our GitHub repository includes [sample code](https://github.com/Donat24/FastVAD/blob/main/examples/showcase.py) that detects voice activity from the microphone and shows it on a graph.
 
+## Performance
+
+| Silero (ONNX) | Silero (JIT) | FastVAD DNN (JIT) | FastVAD GRU (JIT) |
+|---|---|---|---|
+| 0.36 ms | 2.22 ms | 0.49 ms | 0.63 ms |
+
 
 ## Todo:
-
-* inference time benchmark - FastVAD vs Silerio vs WebRTC VAD
 * sample plots for the readme
 
