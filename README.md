@@ -24,6 +24,8 @@ Our GitHub repository includes [sample code](https://github.com/Donat24/FastVAD/
 
 ## Performance
 
+Messured using the [performance evaluation script](https://github.com/Donat24/FastVAD/blob/main/examples/performance_evaluation.py) on a Schenker XMG Fusion 15 on Windows 10.
+
 | Silero (ONNX) | Silero (JIT) | FastVAD DNN (JIT) | FastVAD GRU (JIT) |
 |---|---|---|---|
 | 0.36 ms | 2.22 ms | 0.49 ms | 0.63 ms |
